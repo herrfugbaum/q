@@ -1,0 +1,10 @@
+{
+  "name": "@herrfugbaum/q",
+  "version": "0.0.4",
+  "description": "A parser for SQL like queries on .csv files.",
+  "main": "main.js",
+  "license": "MIT",
+  "dependencies": {
+    "chevrotain": "^4.1.0"
+  }
+}

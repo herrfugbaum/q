@@ -1,0 +1,275 @@
+
+<!-- This is a generated file -->
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+  body {
+    background-color: hsl(30, 20%, 95%)
+  }
+</style>
+
+
+<link rel='stylesheet' href='https://unpkg.com/chevrotain@4.1.0/diagrams/diagrams.css'>
+
+<script src='https://unpkg.com/chevrotain@4.1.0/diagrams/vendor/railroad-diagrams.js'></script>
+<script src='https://unpkg.com/chevrotain@4.1.0/diagrams/src/diagrams_builder.js'></script>
+<script src='https://unpkg.com/chevrotain@4.1.0/diagrams/src/diagrams_behavior.js'></script>
+<script src='https://unpkg.com/chevrotain@4.1.0/diagrams/src/main.js'></script>
+
+<div id="diagrams" align="center"></div>    
+
+<script>
+    window.serializedGrammar = [
+  {
+    "type": "Rule",
+    "name": "selectStatement",
+    "orgText": "() => {\r\n      $.SUBRULE($.selectClause)\r\n      $.SUBRULE($.fromClause)\r\n      $.OPTION(() => {\r\n        $.SUBRULE($.whereClause)\r\n      })\r\n    }",
+    "definition": [
+      {
+        "type": "NonTerminal",
+        "name": "selectClause",
+        "idx": 0
+      },
+      {
+        "type": "NonTerminal",
+        "name": "fromClause",
+        "idx": 0
+      },
+      {
+        "type": "Option",
+        "idx": 0,
+        "definition": [
+          {
+            "type": "NonTerminal",
+            "name": "whereClause",
+            "idx": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "Rule",
+    "name": "selectClause",
+    "orgText": "() => {\r\n      $.CONSUME(Select)\r\n      $.AT_LEAST_ONE_SEP({\r\n        SEP: Comma,\r\n        DEF: () => {\r\n          $.CONSUME(Identifier)\r\n        },\r\n      })\r\n    }",
+    "definition": [
+      {
+        "type": "Terminal",
+        "name": "Select",
+        "label": "Select",
+        "idx": 0,
+        "pattern": "SELECT"
+      },
+      {
+        "type": "RepetitionMandatoryWithSeparator",
+        "idx": 0,
+        "separator": {
+          "type": "Terminal",
+          "name": "Comma",
+          "label": "Comma",
+          "idx": 1,
+          "pattern": ","
+        },
+        "definition": [
+          {
+            "type": "Terminal",
+            "name": "Identifier",
+            "label": "Identifier",
+            "idx": 0,
+            "pattern": "\\*|\\w+"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "Rule",
+    "name": "fromClause",
+    "orgText": "() => {\r\n      $.CONSUME(From)\r\n      $.CONSUME(Identifier)\r\n    }",
+    "definition": [
+      {
+        "type": "Terminal",
+        "name": "From",
+        "label": "From",
+        "idx": 0,
+        "pattern": "FROM"
+      },
+      {
+        "type": "Terminal",
+        "name": "Identifier",
+        "label": "Identifier",
+        "idx": 0,
+        "pattern": "\\*|\\w+"
+      }
+    ]
+  },
+  {
+    "type": "Rule",
+    "name": "whereClause",
+    "orgText": "() => {\r\n      $.CONSUME(Where)\r\n      $.SUBRULE($.expression)\r\n    }",
+    "definition": [
+      {
+        "type": "Terminal",
+        "name": "Where",
+        "label": "Where",
+        "idx": 0,
+        "pattern": "WHERE"
+      },
+      {
+        "type": "NonTerminal",
+        "name": "expression",
+        "idx": 0
+      }
+    ]
+  },
+  {
+    "type": "Rule",
+    "name": "expression",
+    "orgText": "() => {\r\n      $.SUBRULE($.atomicExpression, { LABEL: 'lhs' })\r\n      $.SUBRULE($.relationalOperator)\r\n      $.SUBRULE2($.atomicExpression, { LABEL: 'rhs' }) // note the '2' suffix to distinguish\r\n      // from the 'SUBRULE(atomicExpression)'\r\n      // 2 lines above.\r\n    }",
+    "definition": [
+      {
+        "type": "NonTerminal",
+        "name": "atomicExpression",
+        "idx": 0
+      },
+      {
+        "type": "NonTerminal",
+        "name": "relationalOperator",
+        "idx": 0
+      },
+      {
+        "type": "NonTerminal",
+        "name": "atomicExpression",
+        "idx": 2
+      }
+    ]
+  },
+  {
+    "type": "Rule",
+    "name": "atomicExpression",
+    "orgText": "() => {\r\n      $.OR([\r\n        { ALT: () => $.CONSUME(Integer) },\r\n        { ALT: () => $.CONSUME(Identifier) },\r\n      ])\r\n    }",
+    "definition": [
+      {
+        "type": "Alternation",
+        "idx": 0,
+        "definition": [
+          {
+            "type": "Flat",
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "Integer",
+                "label": "Integer",
+                "idx": 0,
+                "pattern": "0|[1-9]\\d+"
+              }
+            ]
+          },
+          {
+            "type": "Flat",
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "Identifier",
+                "label": "Identifier",
+                "idx": 0,
+                "pattern": "\\*|\\w+"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "Rule",
+    "name": "relationalOperator",
+    "orgText": "() => {\r\n      $.OR([\r\n        { ALT: () => $.CONSUME(GreaterThanEqual) },\r\n        { ALT: () => $.CONSUME(LessThanEqual) },\r\n        { ALT: () => $.CONSUME(GreaterThan) },\r\n        { ALT: () => $.CONSUME(LessThan) },\r\n        { ALT: () => $.CONSUME(Equal) },\r\n        { ALT: () => $.CONSUME(NotEqual) },\r\n      ])\r\n    }",
+    "definition": [
+      {
+        "type": "Alternation",
+        "idx": 0,
+        "definition": [
+          {
+            "type": "Flat",
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "GreaterThanEqual",
+                "label": "GreaterThanEqual",
+                "idx": 0,
+                "pattern": ">="
+              }
+            ]
+          },
+          {
+            "type": "Flat",
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "LessThanEqual",
+                "label": "LessThanEqual",
+                "idx": 0,
+                "pattern": "<="
+              }
+            ]
+          },
+          {
+            "type": "Flat",
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "GreaterThan",
+                "label": "GreaterThan",
+                "idx": 0,
+                "pattern": ">"
+              }
+            ]
+          },
+          {
+            "type": "Flat",
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "LessThan",
+                "label": "LessThan",
+                "idx": 0,
+                "pattern": "<"
+              }
+            ]
+          },
+          {
+            "type": "Flat",
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "Equal",
+                "label": "Equal",
+                "idx": 0,
+                "pattern": "="
+              }
+            ]
+          },
+          {
+            "type": "Flat",
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "NotEqual",
+                "label": "NotEqual",
+                "idx": 0,
+                "pattern": "<>"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+];
+</script>
+
+<script>
+    var diagramsDiv = document.getElementById("diagrams");
+    main.drawDiagramsFromSerializedGrammar(serializedGrammar, diagramsDiv);
+</script>
