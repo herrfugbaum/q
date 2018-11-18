@@ -78,7 +78,7 @@ class SQLToAstVisitor extends BaseSQLVisitor {
   orderByClause(ctx) {
 
     const expression = ctx.Identifier[0].image
-    const condition = this.visit(ctx.orderByExpression)
+    const condition = this.visit(ctx.orderByExpression) || 'ASC'
     return {
       type: 'ORDERBY_CLAUSE',
       expression: expression,
@@ -89,9 +89,8 @@ class SQLToAstVisitor extends BaseSQLVisitor {
   orderByExpression(ctx) {
     if (ctx.Desc) {
       return ctx.Desc[0].image
-    } else {
-      return ctx.Asc[0].image
     }
+    return ctx.Asc[0].image
   }
 
   expression(ctx) {
