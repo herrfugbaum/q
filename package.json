@@ -1,9 +1,17 @@
 {
   "name": "@herrfugbaum/q",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A parser for SQL like queries on .csv files.",
   "main": "main.js",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/herrfugbaum/q.git"
+  },
+  "bugs": {
+    "url": "https://github.com/herrfugbaum/q/issues"
+  },
+  "homepage": "https://github.com/herrfugbaum/q#readme",
   "dependencies": {
     "chevrotain": "^4.1.0"
   }
