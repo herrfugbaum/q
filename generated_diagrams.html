@@ -23,7 +23,7 @@
   {
     "type": "Rule",
     "name": "selectStatement",
-    "orgText": "() => {\r\n      $.SUBRULE($.selectClause)\r\n      $.SUBRULE($.fromClause)\r\n      $.OPTION(() => {\r\n        $.SUBRULE($.whereClause)\r\n      })\r\n    }",
+    "orgText": "() => {\r\n      $.SUBRULE($.selectClause)\r\n      $.SUBRULE($.fromClause)\r\n      $.OPTION(() => {\r\n        $.SUBRULE($.whereClause)\r\n      })\r\n      $.OPTION1(() => {\r\n        $.SUBRULE($.orderByClause)\r\n      })\r\n    }",
     "definition": [
       {
         "type": "NonTerminal",
@@ -42,6 +42,17 @@
           {
             "type": "NonTerminal",
             "name": "whereClause",
+            "idx": 0
+          }
+        ]
+      },
+      {
+        "type": "Option",
+        "idx": 1,
+        "definition": [
+          {
+            "type": "NonTerminal",
+            "name": "orderByClause",
             "idx": 0
           }
         ]
@@ -124,6 +135,38 @@
   },
   {
     "type": "Rule",
+    "name": "orderByClause",
+    "orgText": "() => {\r\n      $.CONSUME(OrderBy)\r\n      $.CONSUME(Identifier)\r\n      $.OPTION(() => {\r\n        $.SUBRULE($.orderByExpression)\r\n      })\r\n    }",
+    "definition": [
+      {
+        "type": "Terminal",
+        "name": "OrderBy",
+        "label": "OrderBy",
+        "idx": 0,
+        "pattern": "ORDER BY"
+      },
+      {
+        "type": "Terminal",
+        "name": "Identifier",
+        "label": "Identifier",
+        "idx": 0,
+        "pattern": "\\*|\\w+"
+      },
+      {
+        "type": "Option",
+        "idx": 0,
+        "definition": [
+          {
+            "type": "NonTerminal",
+            "name": "orderByExpression",
+            "idx": 0
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "Rule",
     "name": "expression",
     "orgText": "() => {\r\n      $.SUBRULE($.atomicExpression, { LABEL: 'lhs' })\r\n      $.SUBRULE($.relationalOperator)\r\n      $.SUBRULE2($.atomicExpression, { LABEL: 'rhs' }) // note the '2' suffix to distinguish\r\n      // from the 'SUBRULE(atomicExpression)'\r\n      // 2 lines above.\r\n    }",
     "definition": [
@@ -174,6 +217,43 @@
                 "label": "Identifier",
                 "idx": 0,
                 "pattern": "\\*|\\w+"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "Rule",
+    "name": "orderByExpression",
+    "orgText": "() => {\r\n      $.OR([\r\n        { ALT: () => $.CONSUME(Asc)},\r\n        { ALT: () => $.CONSUME(Desc)},\r\n      ])\r\n    }",
+    "definition": [
+      {
+        "type": "Alternation",
+        "idx": 0,
+        "definition": [
+          {
+            "type": "Flat",
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "Asc",
+                "label": "Asc",
+                "idx": 0,
+                "pattern": "ASC"
+              }
+            ]
+          },
+          {
+            "type": "Flat",
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "Desc",
+                "label": "Desc",
+                "idx": 0,
+                "pattern": "DESC"
               }
             ]
           }

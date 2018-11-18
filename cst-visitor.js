@@ -34,11 +34,15 @@ class SQLToAstVisitor extends BaseSQLVisitor {
     // "whereClause" is optional, "this.visit" will ignore empty arrays (optional)
     const where = this.visit(ctx.whereClause)
 
+    // "orderByClause" is optional, "this.visit" will ignore empty arrays (optional)
+    const orderBy = this.visit(ctx.orderByClause)
+
     return {
       type: 'SELECT_STMT',
       selectClause: select,
       fromClause: from,
       whereClause: where,
+      orderByClause: orderBy
     }
   }
 
@@ -68,6 +72,25 @@ class SQLToAstVisitor extends BaseSQLVisitor {
     return {
       type: 'WHERE_CLAUSE',
       condition: condition,
+    }
+  }
+
+  orderByClause(ctx) {
+
+    const expression = ctx.Identifier[0].image
+    const condition = this.visit(ctx.orderByExpression)
+    return {
+      type: 'ORDERBY_CLAUSE',
+      expression: expression,
+      condition: condition
+    }
+  }
+
+  orderByExpression(ctx) {
+    if (ctx.Desc) {
+      return ctx.Desc[0].image
+    } else {
+      return ctx.Asc[0].image
     }
   }
 
@@ -126,7 +149,7 @@ module.exports = {
 
     if (parserInstance.errors.length > 0) {
       throw Error(
-        'Sad sad panda, parsing errors detected!\n' +
+        'Parsing errors detected!\n' +
           parserInstance.errors[0].message
       )
     }

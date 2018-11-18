@@ -15,8 +15,12 @@ const tokenVocabulary = selectLexer.tokenVocabulary
 const Select = tokenVocabulary.Select
 const From = tokenVocabulary.From
 const Where = tokenVocabulary.Where
+const OrderBy = tokenVocabulary.OrderBy
+const Asc = tokenVocabulary.Asc
+const Desc = tokenVocabulary.Desc
 const Identifier = tokenVocabulary.Identifier
 const Integer = tokenVocabulary.Integer
+
 const GreaterThan = tokenVocabulary.GreaterThan
 const GreaterThanEqual = tokenVocabulary.GreaterThanEqual
 const LessThan = tokenVocabulary.LessThan
@@ -41,6 +45,9 @@ class SelectParser extends Parser {
       $.OPTION(() => {
         $.SUBRULE($.whereClause)
       })
+      $.OPTION1(() => {
+        $.SUBRULE($.orderByClause)
+      })
     })
 
     $.RULE('selectClause', () => {
@@ -63,6 +70,14 @@ class SelectParser extends Parser {
       $.SUBRULE($.expression)
     })
 
+    $.RULE('orderByClause', () => {
+      $.CONSUME(OrderBy)
+      $.CONSUME(Identifier)
+      $.OPTION(() => {
+        $.SUBRULE($.orderByExpression)
+      })
+    })
+
     // The "rhs" and "lhs" (Right/Left Hand Side) labels will provide easy
     // to use names during CST Visitor (step 3a).
     $.RULE('expression', () => {
@@ -77,6 +92,13 @@ class SelectParser extends Parser {
       $.OR([
         { ALT: () => $.CONSUME(Integer) },
         { ALT: () => $.CONSUME(Identifier) },
+      ])
+    })
+
+    $.RULE('orderByExpression', () => {
+      $.OR([
+        { ALT: () => $.CONSUME(Asc)},
+        { ALT: () => $.CONSUME(Desc)},
       ])
     })
 

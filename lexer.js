@@ -26,6 +26,11 @@ const Where = createToken({
   pattern: /WHERE/,
   longer_alt: Identifier,
 })
+const OrderBy = createToken({
+  name: 'OrderBy',
+  pattern: /ORDER BY/,
+  longer_alt: Identifier,
+})
 
 const Comma = createToken({ name: 'Comma', pattern: /,/ })
 const Integer = createToken({ name: 'Integer', pattern: /0|[1-9]\d+/ })
@@ -42,6 +47,8 @@ const LessThan = createToken({
   name: 'LessThan',
   pattern: /</,
 })
+const Asc = createToken({ name: 'Asc', pattern: /ASC/, longer_alt: Identifier})
+const Desc = createToken({name: 'Desc', pattern: /DESC/, longer_alt: Identifier})
 const Equal = createToken({ name: 'Equal', pattern: /=/ })
 const NotEqual = createToken({ name: 'NotEqual', pattern: /<>/ })
 
@@ -57,7 +64,10 @@ let allTokens = [
   Select,
   From,
   Where,
+  OrderBy,
   Comma,
+  Asc,
+  Desc,
   // The Identifier must appear after the keywords because all keywords are valid identifiers.
   Identifier,
   Integer,
