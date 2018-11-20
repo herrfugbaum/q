@@ -1,6 +1,6 @@
 {
   "name": "@herrfugbaum/q",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A parser for SQL like queries on .csv files.",
   "main": "main.js",
   "license": "MIT",
