@@ -42,7 +42,7 @@ const Limit = createToken({
 })
 
 const Comma = createToken({ name: 'Comma', pattern: /,/ })
-const Integer = createToken({ name: 'Integer', pattern: /0|[1-9]\d+/ })
+const Integer = createToken({ name: 'Integer', pattern: /0|[1-9]\d*/ })
 const GreaterThanEqual = createToken({
   name: 'GreaterThanEqual',
   pattern: />=/,
