@@ -37,12 +37,16 @@ class SQLToAstVisitor extends BaseSQLVisitor {
     // "orderByClause" is optional, "this.visit" will ignore empty arrays (optional)
     const orderBy = this.visit(ctx.orderByClause)
 
+    // "limitClause" is optional, "this.visit" will ignore empty arrays (optional)
+    const limit = this.visit(ctx.limitClause)
+
     return {
       type: 'SELECT_STMT',
       selectClause: select,
       fromClause: from,
       whereClause: where,
-      orderByClause: orderBy
+      orderByClause: orderBy,
+      limitClause: limit,
     }
   }
 
@@ -76,14 +80,17 @@ class SQLToAstVisitor extends BaseSQLVisitor {
   }
 
   orderByClause(ctx) {
-
     const expression = ctx.Identifier[0].image
     const condition = this.visit(ctx.orderByExpression) || 'ASC'
     return {
       type: 'ORDERBY_CLAUSE',
       expression: expression,
-      condition: condition
+      condition: condition,
     }
+  }
+
+  limitClause(ctx) {
+    console.log(ctx)
   }
 
   orderByExpression(ctx) {
@@ -148,8 +155,7 @@ module.exports = {
 
     if (parserInstance.errors.length > 0) {
       throw Error(
-        'Parsing errors detected!\n' +
-          parserInstance.errors[0].message
+        'Parsing errors detected!\n' + parserInstance.errors[0].message
       )
     }
 

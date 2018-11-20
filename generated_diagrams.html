@@ -23,7 +23,7 @@
   {
     "type": "Rule",
     "name": "selectStatement",
-    "orgText": "() => {\r\n      $.SUBRULE($.selectClause)\r\n      $.SUBRULE($.fromClause)\r\n      $.OPTION(() => {\r\n        $.SUBRULE($.whereClause)\r\n      })\r\n      $.OPTION1(() => {\r\n        $.SUBRULE($.orderByClause)\r\n      })\r\n    }",
+    "orgText": "() => {\r\n      $.SUBRULE($.selectClause)\r\n      $.SUBRULE($.fromClause)\r\n      $.OPTION(() => {\r\n        $.SUBRULE($.whereClause)\r\n      })\r\n      $.OPTION1(() => {\r\n        $.SUBRULE($.orderByClause)\r\n      })\r\n      $.OPTION2(() => {\r\n        $.SUBRULE($.limitClause)\r\n      })\r\n    }",
     "definition": [
       {
         "type": "NonTerminal",
@@ -53,6 +53,17 @@
           {
             "type": "NonTerminal",
             "name": "orderByClause",
+            "idx": 0
+          }
+        ]
+      },
+      {
+        "type": "Option",
+        "idx": 2,
+        "definition": [
+          {
+            "type": "NonTerminal",
+            "name": "limitClause",
             "idx": 0
           }
         ]
@@ -167,6 +178,27 @@
   },
   {
     "type": "Rule",
+    "name": "limitClause",
+    "orgText": "() => {\r\n      $.CONSUME(Limit)\r\n      $.CONSUME(Integer)\r\n    }",
+    "definition": [
+      {
+        "type": "Terminal",
+        "name": "Limit",
+        "label": "Limit",
+        "idx": 0,
+        "pattern": "LIMIT"
+      },
+      {
+        "type": "Terminal",
+        "name": "Integer",
+        "label": "Integer",
+        "idx": 0,
+        "pattern": "0|[1-9]\\d+"
+      }
+    ]
+  },
+  {
+    "type": "Rule",
     "name": "expression",
     "orgText": "() => {\r\n      $.SUBRULE($.atomicExpression, { LABEL: 'lhs' })\r\n      $.SUBRULE($.relationalOperator)\r\n      $.SUBRULE2($.atomicExpression, { LABEL: 'rhs' }) // note the '2' suffix to distinguish\r\n      // from the 'SUBRULE(atomicExpression)'\r\n      // 2 lines above.\r\n    }",
     "definition": [
@@ -227,7 +259,7 @@
   {
     "type": "Rule",
     "name": "orderByExpression",
-    "orgText": "() => {\r\n      $.OR([\r\n        { ALT: () => $.CONSUME(Asc)},\r\n        { ALT: () => $.CONSUME(Desc)},\r\n      ])\r\n    }",
+    "orgText": "() => {\r\n      $.OR([{ ALT: () => $.CONSUME(Asc) }, { ALT: () => $.CONSUME(Desc) }])\r\n    }",
     "definition": [
       {
         "type": "Alternation",

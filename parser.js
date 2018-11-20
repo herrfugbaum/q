@@ -18,6 +18,7 @@ const Where = tokenVocabulary.Where
 const OrderBy = tokenVocabulary.OrderBy
 const Asc = tokenVocabulary.Asc
 const Desc = tokenVocabulary.Desc
+const Limit = tokenVocabulary.Limit
 const Identifier = tokenVocabulary.Identifier
 const Integer = tokenVocabulary.Integer
 
@@ -47,6 +48,9 @@ class SelectParser extends Parser {
       })
       $.OPTION1(() => {
         $.SUBRULE($.orderByClause)
+      })
+      $.OPTION2(() => {
+        $.SUBRULE($.limitClause)
       })
     })
 
@@ -78,6 +82,11 @@ class SelectParser extends Parser {
       })
     })
 
+    $.RULE('limitClause', () => {
+      $.CONSUME(Limit)
+      $.CONSUME(Integer)
+    })
+
     // The "rhs" and "lhs" (Right/Left Hand Side) labels will provide easy
     // to use names during CST Visitor (step 3a).
     $.RULE('expression', () => {
@@ -96,10 +105,7 @@ class SelectParser extends Parser {
     })
 
     $.RULE('orderByExpression', () => {
-      $.OR([
-        { ALT: () => $.CONSUME(Asc)},
-        { ALT: () => $.CONSUME(Desc)},
-      ])
+      $.OR([{ ALT: () => $.CONSUME(Asc) }, { ALT: () => $.CONSUME(Desc) }])
     })
 
     $.RULE('relationalOperator', () => {
@@ -139,8 +145,7 @@ module.exports = {
 
     if (parserInstance.errors.length > 0) {
       throw Error(
-        'Parsing errors detected!\n' +
-          parserInstance.errors[0].message
+        'Parsing errors detected!\n' + parserInstance.errors[0].message
       )
     }
   },

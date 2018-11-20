@@ -32,6 +32,12 @@ const OrderBy = createToken({
   longer_alt: Identifier,
 })
 
+const Limit = createToken({
+  name: 'Limit',
+  pattern: /LIMIT/,
+  longer_alt: Identifier,
+})
+
 const Comma = createToken({ name: 'Comma', pattern: /,/ })
 const Integer = createToken({ name: 'Integer', pattern: /0|[1-9]\d+/ })
 const GreaterThanEqual = createToken({
@@ -47,8 +53,12 @@ const LessThan = createToken({
   name: 'LessThan',
   pattern: /</,
 })
-const Asc = createToken({ name: 'Asc', pattern: /ASC/, longer_alt: Identifier})
-const Desc = createToken({name: 'Desc', pattern: /DESC/, longer_alt: Identifier})
+const Asc = createToken({ name: 'Asc', pattern: /ASC/, longer_alt: Identifier })
+const Desc = createToken({
+  name: 'Desc',
+  pattern: /DESC/,
+  longer_alt: Identifier,
+})
 const Equal = createToken({ name: 'Equal', pattern: /=/ })
 const NotEqual = createToken({ name: 'NotEqual', pattern: /<>/ })
 
@@ -65,6 +75,7 @@ let allTokens = [
   From,
   Where,
   OrderBy,
+  Limit,
   Comma,
   Asc,
   Desc,
