@@ -7,7 +7,10 @@ const tokenVocabulary = {}
 
 // createToken is used to create a TokenType
 // The Lexer's output will contain an array of token Objects created by metadata
-const Identifier = createToken({ name: 'Identifier', pattern: /\*|\w+/ })
+const Identifier = createToken({
+  name: 'Identifier',
+  pattern: /\*|[a-zA-Z]\w*/,
+})
 
 // We specify the "longer_alt" property to resolve keywords vs identifiers ambiguity.
 // See: https://github.com/SAP/chevrotain/blob/master/examples/lexer/keywords_vs_identifiers/keywords_vs_identifiers.js
