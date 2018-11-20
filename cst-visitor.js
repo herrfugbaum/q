@@ -90,7 +90,11 @@ class SQLToAstVisitor extends BaseSQLVisitor {
   }
 
   limitClause(ctx) {
-    console.log(ctx)
+    const limit = parseInt(ctx.Integer[0].image, 10)
+    return {
+      type: 'LIMIT_CLAUSE',
+      limit: limit,
+    }
   }
 
   orderByExpression(ctx) {
@@ -117,7 +121,7 @@ class SQLToAstVisitor extends BaseSQLVisitor {
   // these two visitor methods will return a string.
   atomicExpression(ctx) {
     if (ctx.Integer) {
-      return ctx.Integer[0].image
+      return parseInt(ctx.Integer[0].image, 10)
     } else {
       return ctx.Identifier[0].image
     }
