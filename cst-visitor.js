@@ -46,18 +46,30 @@ class SQLToAstVisitor extends BaseSQLVisitor {
       fromClause: from,
       whereClause: where,
       orderByClause: orderBy,
-      limitClause: limit,
+      limitClause: limit
     }
   }
 
   selectClause(ctx) {
     // Each Terminal or Non-Terminal in a grammar rule are collected into
     // an array with the same name(key) in the ctx object.
-    const columns = ctx.Identifier.map(identToken => identToken.image)
-
-    return {
-      type: 'SELECT_CLAUSE',
-      columns: columns,
+    //console.log(ctx.minMaxExpression[0].children.Max)
+    if(ctx.Identifier) {
+      const columns = ctx.Identifier.map(identToken => identToken.image)
+      
+      return {
+        type: 'SELECT_CLAUSE',
+        columns: columns,
+        minMax: null
+      }
+    } else {
+       const column = ctx.minMaxExpression[0].children.Identifier[0].image
+       const minMax = ctx.minMaxExpression[0].children.Min ? 'min' : 'max'
+      return {
+        type: 'SELECT_CLAUSE',
+        columns: [column], // return an array for consistency
+        minMax: minMax
+      }
     }
   }
 
@@ -102,6 +114,14 @@ class SQLToAstVisitor extends BaseSQLVisitor {
       return ctx.Desc[0].image
     }
     return ctx.Asc[0].image
+  }
+
+  minMaxExpression(ctx) {
+    /* console.log('--> minMax fired <--')
+    if(ctx.Min) {
+      return ctx.Min[0].image
+    }
+    return ctx.Max[0].image */
   }
 
   expression(ctx) {
