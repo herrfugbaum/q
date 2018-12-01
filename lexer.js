@@ -16,28 +16,28 @@ const Identifier = createToken({
 // See: https://github.com/SAP/chevrotain/blob/master/examples/lexer/keywords_vs_identifiers/keywords_vs_identifiers.js
 const Select = createToken({
   name: 'Select',
-  pattern: /SELECT/,
+  pattern: /SELECT/i,
   longer_alt: Identifier,
 })
 const From = createToken({
   name: 'From',
-  pattern: /FROM/,
+  pattern: /FROM/i,
   longer_alt: Identifier,
 })
 const Where = createToken({
   name: 'Where',
-  pattern: /WHERE/,
+  pattern: /WHERE/i,
   longer_alt: Identifier,
 })
 const OrderBy = createToken({
   name: 'OrderBy',
-  pattern: /ORDER BY/,
+  pattern: /ORDER BY/i,
   longer_alt: Identifier,
 })
 
 const Limit = createToken({
   name: 'Limit',
-  pattern: /LIMIT/,
+  pattern: /LIMIT/i,
   longer_alt: Identifier,
 })
 
