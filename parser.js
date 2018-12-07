@@ -19,6 +19,8 @@ const OrderBy = tokenVocabulary.OrderBy
 const Asc = tokenVocabulary.Asc
 const Desc = tokenVocabulary.Desc
 const Limit = tokenVocabulary.Limit
+const Min = tokenVocabulary.Min
+const Max = tokenVocabulary.Max
 const Identifier = tokenVocabulary.Identifier
 const Integer = tokenVocabulary.Integer
 
@@ -29,6 +31,8 @@ const LessThanEqual = tokenVocabulary.LessThanEqual
 const Comma = tokenVocabulary.Comma
 const Equal = tokenVocabulary.Equal
 const NotEqual = tokenVocabulary.NotEqual
+const LParen = tokenVocabulary.LParen
+const RParen = tokenVocabulary.RParen
 
 // ----------------- parser -----------------
 class SelectParser extends Parser {
@@ -56,12 +60,31 @@ class SelectParser extends Parser {
 
     $.RULE('selectClause', () => {
       $.CONSUME(Select)
-      $.AT_LEAST_ONE_SEP({
-        SEP: Comma,
-        DEF: () => {
-          $.CONSUME(Identifier)
+      $.OR([
+        { ALT: () => {
+            $.AT_LEAST_ONE_SEP({
+              SEP: Comma,
+              DEF: () => {
+                $.CONSUME(Identifier)
+              },
+            })
+          }
         },
-      })
+        { ALT: () => {
+            $.SUBRULE($.minMaxExpression)
+          }
+        }
+      ])
+    })
+
+    $.RULE('minMaxExpression', () => {
+      $.OR([
+        { ALT: () => $.CONSUME(Min) },
+        { ALT: () => $.CONSUME(Max) }
+      ])
+      $.CONSUME(LParen)
+      $.CONSUME(Identifier)
+      $.CONSUME(RParen)
     })
 
     $.RULE('fromClause', () => {

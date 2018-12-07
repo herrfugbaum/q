@@ -73,7 +73,7 @@
   {
     "type": "Rule",
     "name": "selectClause",
-    "orgText": "() => {\r\n      $.CONSUME(Select)\r\n      $.AT_LEAST_ONE_SEP({\r\n        SEP: Comma,\r\n        DEF: () => {\r\n          $.CONSUME(Identifier)\r\n        },\r\n      })\r\n    }",
+    "orgText": "() => {\r\n      $.CONSUME(Select)\r\n      $.OR([\r\n        { ALT: () => {\r\n            $.AT_LEAST_ONE_SEP({\r\n              SEP: Comma,\r\n              DEF: () => {\r\n                $.CONSUME(Identifier)\r\n              },\r\n            })\r\n          }\r\n        },\r\n        { ALT: () => {\r\n            $.SUBRULE($.minMaxExpression)\r\n          }\r\n        }\r\n      ])\r\n    }",
     "definition": [
       {
         "type": "Terminal",
@@ -83,24 +83,103 @@
         "pattern": "SELECT"
       },
       {
-        "type": "RepetitionMandatoryWithSeparator",
+        "type": "Alternation",
         "idx": 0,
-        "separator": {
-          "type": "Terminal",
-          "name": "Comma",
-          "label": "Comma",
-          "idx": 1,
-          "pattern": ","
-        },
         "definition": [
           {
-            "type": "Terminal",
-            "name": "Identifier",
-            "label": "Identifier",
-            "idx": 0,
-            "pattern": "\\*|\\w+"
+            "type": "Flat",
+            "definition": [
+              {
+                "type": "RepetitionMandatoryWithSeparator",
+                "idx": 0,
+                "separator": {
+                  "type": "Terminal",
+                  "name": "Comma",
+                  "label": "Comma",
+                  "idx": 1,
+                  "pattern": ","
+                },
+                "definition": [
+                  {
+                    "type": "Terminal",
+                    "name": "Identifier",
+                    "label": "Identifier",
+                    "idx": 0,
+                    "pattern": "\\*|[a-zA-Z]\\w*"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": "Flat",
+            "definition": [
+              {
+                "type": "NonTerminal",
+                "name": "minMaxExpression",
+                "idx": 0
+              }
+            ]
           }
         ]
+      }
+    ]
+  },
+  {
+    "type": "Rule",
+    "name": "minMaxExpression",
+    "orgText": "() => {\r\n      $.OR([\r\n        { ALT: () => $.CONSUME(Min) },\r\n        { ALT: () => $.CONSUME(Max) }\r\n      ])\r\n      $.CONSUME(LParen)\r\n      $.CONSUME(Identifier)\r\n      $.CONSUME(RParen)\r\n    }",
+    "definition": [
+      {
+        "type": "Alternation",
+        "idx": 0,
+        "definition": [
+          {
+            "type": "Flat",
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "Min",
+                "label": "Min",
+                "idx": 0,
+                "pattern": "MIN"
+              }
+            ]
+          },
+          {
+            "type": "Flat",
+            "definition": [
+              {
+                "type": "Terminal",
+                "name": "Max",
+                "label": "Max",
+                "idx": 0,
+                "pattern": "MAX"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Terminal",
+        "name": "LParen",
+        "label": "LParen",
+        "idx": 0,
+        "pattern": "\\("
+      },
+      {
+        "type": "Terminal",
+        "name": "Identifier",
+        "label": "Identifier",
+        "idx": 0,
+        "pattern": "\\*|[a-zA-Z]\\w*"
+      },
+      {
+        "type": "Terminal",
+        "name": "RParen",
+        "label": "RParen",
+        "idx": 0,
+        "pattern": "\\)"
       }
     ]
   },
@@ -121,7 +200,7 @@
         "name": "Identifier",
         "label": "Identifier",
         "idx": 0,
-        "pattern": "\\*|\\w+"
+        "pattern": "\\*|[a-zA-Z]\\w*"
       }
     ]
   },
@@ -161,7 +240,7 @@
         "name": "Identifier",
         "label": "Identifier",
         "idx": 0,
-        "pattern": "\\*|\\w+"
+        "pattern": "\\*|[a-zA-Z]\\w*"
       },
       {
         "type": "Option",
@@ -193,7 +272,7 @@
         "name": "Integer",
         "label": "Integer",
         "idx": 0,
-        "pattern": "0|[1-9]\\d+"
+        "pattern": "0|[1-9]\\d*"
       }
     ]
   },
@@ -236,7 +315,7 @@
                 "name": "Integer",
                 "label": "Integer",
                 "idx": 0,
-                "pattern": "0|[1-9]\\d+"
+                "pattern": "0|[1-9]\\d*"
               }
             ]
           },
@@ -248,7 +327,7 @@
                 "name": "Identifier",
                 "label": "Identifier",
                 "idx": 0,
-                "pattern": "\\*|\\w+"
+                "pattern": "\\*|[a-zA-Z]\\w*"
               }
             ]
           }

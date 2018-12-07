@@ -41,6 +41,18 @@ const Limit = createToken({
   longer_alt: Identifier,
 })
 
+const Min = createToken({
+  name: 'Min',
+  pattern: /MIN/i,
+  longer_alt: Identifier
+})
+
+const Max = createToken({
+  name: 'Max',
+  pattern: /MAX/i,
+  longer_alt: Identifier
+})
+
 const Comma = createToken({ name: 'Comma', pattern: /,/ })
 const Integer = createToken({ name: 'Integer', pattern: /0|[1-9]\d*/ })
 const GreaterThanEqual = createToken({
@@ -65,6 +77,16 @@ const Desc = createToken({
 const Equal = createToken({ name: 'Equal', pattern: /=/ })
 const NotEqual = createToken({ name: 'NotEqual', pattern: /<>/ })
 
+const LParen = createToken({
+  name: 'LParen',
+  pattern: /\(/
+})
+
+const RParen = createToken({
+  name: 'RParen',
+  pattern: /\)/
+})
+
 const WhiteSpace = createToken({
   name: 'WhiteSpace',
   pattern: /\s+/,
@@ -82,6 +104,8 @@ let allTokens = [
   Comma,
   Asc,
   Desc,
+  Min,
+  Max,
   // The Identifier must appear after the keywords because all keywords are valid identifiers.
   Identifier,
   Integer,
@@ -91,6 +115,8 @@ let allTokens = [
   GreaterThan,
   LessThanEqual,
   LessThan,
+  LParen,
+  RParen
 ]
 
 const SelectLexer = new Lexer(allTokens)
